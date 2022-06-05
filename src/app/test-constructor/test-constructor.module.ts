@@ -10,6 +10,7 @@ import {AuthGuard} from "../shared/services/auth.guard";
 import { ConstructorLayoutComponent } from './constructor-layout/constructor-layout.component';
 import {TestPageComponent} from "../test-page/test-page.component";
 import {AlertService} from "../shared/services/alert.service";
+import { CreateTestDialogComponent } from './create-test-dialog/create-test-dialog.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {AlertService} from "../shared/services/alert.service";
     DeleteDialogComponent,
     QuestionListPageComponent,
     TestConstructorComponent,
-    ConstructorLayoutComponent
+    ConstructorLayoutComponent,
+    CreateTestDialogComponent
   ],
   imports: [
     CommonModule,

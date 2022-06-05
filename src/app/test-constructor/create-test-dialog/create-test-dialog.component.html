@@ -1,0 +1,35 @@
+<h1 mat-dialog-title>Создание теста</h1>
+
+<form [formGroup]="form">
+  <div mat-dialog-content class="mat-typography">
+    <mat-form-field>
+      <input matInput placeholder="Название теста" formControlName="name" autocomplete="off">
+      <mat-error *ngIf="getControlErrors('name')?.['required']">
+        Поле <strong>название теста</strong> не может быть пустым
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="number" placeholder="Время на прохождение (в минутах)" formControlName="timeForCompetition"
+             autocomplete="off">
+      <mat-error *ngIf="getControlErrors('timeForCompetition')?.['required']">
+        Поле <strong>время на прохождение</strong> не может быть пустым
+      </mat-error>
+      <mat-error *ngIf="getControlErrors('timeForCompetition')?.['max']">
+        Поле <strong>время на прохождение</strong> не может быть
+        больше {{getControlErrors('timeForCompetition')?.['max']?.['max']}}
+      </mat-error>
+    </mat-form-field>
+
+    <p>Вопросы теста:</p>
+
+    <ul>
+      <li *ngFor="let question of test.questions; let idx = index"> {{ idx + 1 }}. {{ question.question }} </li>
+    </ul>
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-raised-button (click)="close()">Отменить</button>
+    <button mat-raised-button (click)="save()" color="accent" type="submit" [disabled]="form.invalid || form.pending">Сохранить</button>
+  </div>
+</form>

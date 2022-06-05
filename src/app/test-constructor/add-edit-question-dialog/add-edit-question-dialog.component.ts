@@ -61,11 +61,11 @@ export class AddEditQuestionDialogComponent implements OnInit {
     (this.form.get('answers') as FormArray).push(group);
   }
 
-  onNoClick(): void {
+  close(): void {
     this.dialogRef.close();
   }
 
-  submit() {
+  save() {
     if (this.form.valid) {
       Object.assign(this.question, this.form.value);
       this.dialogRef.close(this.question);

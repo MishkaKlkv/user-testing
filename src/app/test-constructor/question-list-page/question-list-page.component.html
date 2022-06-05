@@ -1,7 +1,7 @@
 <div class="container">
   <button class="btn btn-primary" (click)="addOrEditQuestion()">Добавить вопрос</button>
-  <select>
-    <option *ngFor="let category of categories" [value]="category.name">{{ category.title }}</option>
+  <select [(ngModel)]="selectedCategory" (change)="loadQuestions()">
+    <option *ngFor="let category of categories" [ngValue]="category">{{ category.title }}</option>
   </select>
 </div>
 
@@ -25,15 +25,14 @@
       </div>
       <div class="col col-2" data-label="Вопрос"> {{ question.question }} </div>
       <div class="col col-3" data-label="Ответы">
-        <ng-container *ngFor="let answer of question.answers; let last = last">
-          <span [ngClass]="{correctAnswer: answer.isCorrect}">{{ answer.answer }}</span>
-          <br *ngIf="!last"/>
+        <ng-container *ngFor="let answer of question.answers;">
+          <p [ngClass]="{correctAnswer: answer.isCorrect}">{{ answer.answer }}</p>
         </ng-container>
       </div>
       <div class="col col-4" data-label="Примечания">
-        <small *ngFor="let answer of question.answers">
-          {{ answer.note }}
-        </small>
+        <ng-container *ngFor="let answer of question.answers;">
+          <p>{{ answer.note }}</p>
+        </ng-container>
       </div>
       <div class="col col-5">
 <!--        <tui-hosted-dropdown #menu [content]="content">-->

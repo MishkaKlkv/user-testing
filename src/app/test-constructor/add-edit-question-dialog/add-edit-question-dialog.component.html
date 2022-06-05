@@ -1,5 +1,5 @@
 <h1 mat-dialog-title> {{isEdit ? 'Редактирование' : 'Добавление' }} вопроса </h1>
-<form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submit()">
+<form *ngIf="!loading" [formGroup]="form">
   <div mat-dialog-content class="mat-typography">
     <mat-form-field>
       <mat-select placeholder="Категория" formControlName="category">
@@ -43,7 +43,7 @@
   <button mat-raised-button class="button" (click)="addAnswer()">Добавить ответ</button>
 
   <div mat-dialog-actions>
-    <button mat-raised-button (click)="onNoClick()">Отменить</button>
-    <button mat-raised-button color="accent" type="submit" [disabled]="form.invalid || form.pending">Сохранить</button>
+    <button mat-raised-button (click)="close()">Отменить</button>
+    <button mat-raised-button color="accent" type="submit" (click)="save()" [disabled]="form.invalid || form.pending">Сохранить</button>
   </div>
 </form>

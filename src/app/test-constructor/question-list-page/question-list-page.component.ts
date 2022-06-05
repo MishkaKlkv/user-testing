@@ -7,6 +7,7 @@ import {of, Subject, takeUntil} from "rxjs";
 import {SelectionModel} from "@angular/cdk/collections";
 import {AlertService} from "../../shared/services/alert.service";
 import {QuestionCategory} from "../../shared/enums/QuestionCategory";
+import {CreateTestDialogComponent} from "../create-test-dialog/create-test-dialog.component";
 
 @Component({
   selector: 'app-question-list-page',
@@ -21,6 +22,7 @@ export class QuestionListPageComponent implements OnInit, OnDestroy {
   $destroy: Subject<boolean> = new Subject<boolean>();
   menuOpen = false;
   categories: QuestionCategory[] = QuestionCategory.values();
+  selectedCategory: QuestionCategory = QuestionCategory.CARS;
 
   constructor(private dialog: MatDialog,
               private testService: TestService,
@@ -34,10 +36,12 @@ export class QuestionListPageComponent implements OnInit, OnDestroy {
 
   loadQuestions() {
     this.loading = true;
-    this.testService.findAll()
+    this.testService.findAllQuestions()
       .pipe(takeUntil(this.$destroy))
       .subscribe(questions => {
         this.questions = questions;
+        // toDo фильтровать через запрос к бд
+        this.filterQuestions();
         this.loading = false;
         this.detectChanges();
       });
@@ -49,7 +53,7 @@ export class QuestionListPageComponent implements OnInit, OnDestroy {
 
   addOrEditQuestion(id?: string, makeCopy?: boolean) {
     this.menuOpen = false;
-    const $dialogData = id ? this.testService.findById(id) : of(new Question());
+    const $dialogData = id ? this.testService.findQuestionById(id) : of(new Question());
     $dialogData
       .pipe(takeUntil(this.$destroy))
       .subscribe(question => {
@@ -64,9 +68,9 @@ export class QuestionListPageComponent implements OnInit, OnDestroy {
           data: {question}
         });
 
-      dialogRef.afterClosed().subscribe(question => {
-        if (question) {
-          this.testService.createOrUpdateQuestion(question)
+      dialogRef.afterClosed().subscribe(res => {
+        if (res) {
+          this.testService.createOrUpdateQuestion(res)
             .pipe(takeUntil(this.$destroy))
             .subscribe(res => {
               this.loadQuestions();
@@ -94,11 +98,31 @@ export class QuestionListPageComponent implements OnInit, OnDestroy {
   }
 
   createTest(): void {
-    console.log(this.questionsSelection.selected);
+    const dialogRef = this.dialog.open(CreateTestDialogComponent, {
+      disableClose: true,
+      autoFocus: false,
+      width: '60%',
+      data: { questions: this.questionsSelection.selected }
+    });
+
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        this.testService.createOrUpdateTest(res)
+          .pipe(takeUntil(this.$destroy))
+          .subscribe(res => {
+            console.log(res);
+          });
+      }
+    });
+  }
+
+  filterQuestions() {
+    this.questions = this.questions.filter(question => question.category.name === this.selectedCategory.name)
   }
 
   ngOnDestroy(): void {
     this.$destroy.next(true);
     this.$destroy.unsubscribe();
   }
+
 }
