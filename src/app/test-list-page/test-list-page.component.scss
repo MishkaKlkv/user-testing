@@ -1,0 +1,23 @@
+.tests-list {
+  width: 95%;
+  margin: 1em;
+}
+
+.constructor-btn {
+  float: right;
+}
+
+.headers-align .mat-expansion-panel-header-title,
+.headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.accordion {
+  padding-top: 1em;
+}

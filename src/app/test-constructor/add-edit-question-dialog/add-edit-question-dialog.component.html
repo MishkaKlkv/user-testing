@@ -1,0 +1,49 @@
+<h1 mat-dialog-title> {{isEdit ? 'Редактирование' : 'Добавление' }} вопроса </h1>
+<form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submit()">
+  <div mat-dialog-content class="mat-typography">
+    <mat-form-field>
+      <mat-select placeholder="Категория" formControlName="category">
+        <mat-option *ngFor="let category of categories" [value]="category.name">
+          {{category.title}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="getControlErrors('category')?.['required']">
+        Поле <strong>специализация</strong> не может быть пустым
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Вопрос" formControlName="question" autocomplete="off">
+      <mat-error *ngIf="getControlErrors('question')?.['required']">
+        Поле <strong>вопрос</strong> не может быть пустым
+      </mat-error>
+    </mat-form-field>
+
+    <div formArrayName='answers'>
+      <div class="answer-box" *ngFor="let answerGroup of answers.controls; let idx = index;">
+          <ng-container [formGroupName]="idx">
+            <mat-form-field>
+              <input matInput placeholder="Ответ" formControlName="answer" autocomplete="off">
+              <mat-error *ngIf="answerGroup.get('answer')?.errors?.['required']">
+                Поле <strong>ответ</strong> не может быть пустым
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput placeholder="Комментарий" formControlName="note" autocomplete="off">
+            </mat-form-field>
+
+            <mat-checkbox formControlName="isCorrect" (change)="disableOrEnableAllExceptCurrent(idx)">Правильный ответ</mat-checkbox>
+          </ng-container>
+          <mat-icon class="delete-button" (click)="deleteAnswer(idx)">delete</mat-icon>
+        </div>
+    </div>
+  </div>
+
+  <button mat-raised-button class="button" (click)="addAnswer()">Добавить ответ</button>
+
+  <div mat-dialog-actions>
+    <button mat-raised-button (click)="onNoClick()">Отменить</button>
+    <button mat-raised-button color="accent" type="submit" [disabled]="form.invalid || form.pending">Сохранить</button>
+  </div>
+</form>

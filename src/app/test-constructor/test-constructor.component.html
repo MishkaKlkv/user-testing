@@ -1,0 +1,32 @@
+<div class="container">
+  <app-gradient-loader *ngIf="loading"></app-gradient-loader>
+  <h2>Тесты</h2>
+  <ul class="responsive-table">
+    <li class="table-header">
+      <div class="col col-1">№</div>
+      <div class="col col-2">Название</div>
+      <div class="col col-3">Количество вопросов</div>
+      <div class="col col-4">Время</div>
+      <div class="col col-5"></div>
+    </li>
+    <li class="table-row" *ngFor="let test of tests; let idx = index">
+      <div class="col col-1" data-label="№">{{ idx + 1 }}</div>
+      <div class="col col-2" data-label="Название" [routerLink]="[pageMode.name, test.id]"> {{ test.name }} </div>
+      <div class="col col-3" data-label="Количество вопросов"> {{ test.questions?.length }} </div>
+      <div class="col col-4" data-label="Время"> {{ test.timeForCompetition }} </div>
+      <div class="col col-5">
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Меню">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="editTest(test.id)">
+            Редактировать
+          </button>
+          <button mat-menu-item (click)="deleteTest(test.id)">
+            Удалить
+          </button>
+        </mat-menu>
+      </div>
+    </li>
+  </ul>
+</div>

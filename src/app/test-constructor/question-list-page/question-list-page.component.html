@@ -1,0 +1,83 @@
+<div class="container">
+  <button class="btn btn-primary" (click)="addOrEditQuestion()">Добавить вопрос</button>
+  <select>
+    <option *ngFor="let category of categories" [value]="category.name">{{ category.title }}</option>
+  </select>
+</div>
+
+<div class="container">
+  <app-gradient-loader *ngIf="loading"></app-gradient-loader>
+  <h2>Вопросы</h2>
+  <ul class="responsive-table">
+    <li class="table-header">
+      <div class="col col-1">№</div>
+      <div class="col col-2">Вопрос</div>
+      <div class="col col-3">Ответы</div>
+      <div class="col col-4">Примечания</div>
+      <div class="col col-5"></div>
+    </li>
+    <li class="table-row" *ngFor="let question of questions; let idx = index">
+      <div class="col col-1" data-label="№">
+        <input type="checkbox" (click)="$event.stopPropagation()"
+               (change)="$event ? questionsSelection.toggle(question) : null"
+               [checked]="questionsSelection.isSelected(question)"/>
+        {{ idx + 1 }}
+      </div>
+      <div class="col col-2" data-label="Вопрос"> {{ question.question }} </div>
+      <div class="col col-3" data-label="Ответы">
+        <ng-container *ngFor="let answer of question.answers; let last = last">
+          <span [ngClass]="{correctAnswer: answer.isCorrect}">{{ answer.answer }}</span>
+          <br *ngIf="!last"/>
+        </ng-container>
+      </div>
+      <div class="col col-4" data-label="Примечания">
+        <small *ngFor="let answer of question.answers">
+          {{ answer.note }}
+        </small>
+      </div>
+      <div class="col col-5">
+<!--        <tui-hosted-dropdown #menu [content]="content">-->
+<!--          <button-->
+<!--            tuiIconButton-->
+<!--            appearance="flat"-->
+<!--            icon="tuiIconMoreVer"-->
+<!--            type="button"-->
+<!--          ></button>-->
+<!--        </tui-hosted-dropdown>-->
+<!--        <ng-template #content>-->
+<!--          <tui-data-list role="menu">-->
+<!--            <tui-opt-group>-->
+<!--              <a tuiOption-->
+<!--                 role="menuitemradio">Редактировать</a>-->
+<!--            </tui-opt-group>-->
+<!--          </tui-data-list>-->
+
+<!--        </ng-template>-->
+
+
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Меню">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="addOrEditQuestion(question.id)">
+                    Редактировать
+                  </button>
+                  <button mat-menu-item (click)="deleteQuestion(question.id)">
+                    Удалить
+                  </button>
+                  <button mat-menu-item (click)="addOrEditQuestion(question.id, true)">
+                    Новый на основе
+                  </button>
+                </mat-menu>
+      </div>
+    </li>
+  </ul>
+
+  <p>Выбрано вопросов: {{ questionsSelection.selected.length }}</p>
+
+  <button class="btn btn-primary" [disabled]="questionsSelection.isEmpty()" (click)="clearSelection()">Очистить
+    выделение
+  </button>
+  <button class="btn btn-primary" [disabled]="questionsSelection.isEmpty()" (click)="createTest()">Сформировать тест
+  </button>
+</div>

@@ -1,0 +1,54 @@
+<section>
+  <div class="container">
+    <form [formGroup]="authForm" (ngSubmit)="submit()">
+      <div class="alert alert-danger" *ngIf="authService.error$ | async as error">
+        {{ error }}
+      </div>
+
+      <div class="alert alert-info" *ngIf="message">
+        {{ message }}
+      </div>
+
+      <div
+        class="form-control"
+        [ngClass]="{invalid: authForm.get('email')?.touched && authForm.get('email')?.invalid}">
+        <label for="email">email:</label>
+        <input id="email" type="email" formControlName="email">
+
+        <div
+          *ngIf="authForm.get('email')?.touched && authForm.get('email')?.invalid"
+          class="validation"
+        >
+          <small *ngIf="authForm.get('email')?.errors?.['required']">
+            Введите поле email
+          </small>
+          <small *ngIf="authForm.get('email')?.errors?.['email']">
+            Введите корректный email
+          </small>
+        </div>
+      </div>
+
+      <div
+        class="form-control"
+        [ngClass]="{invalid: authForm.get('password')?.touched && authForm.get('password')?.invalid}">
+        <label for="password">пароль:</label>
+        <input id="password" type="password" formControlName="password">
+
+        <div
+          class="validation"
+          *ngIf="authForm.get('password')?.touched && authForm.get('password')?.invalid"
+        >
+          <small *ngIf="authForm.get('password')?.errors?.['required']">
+            Введите пароль
+          </small>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="authForm.invalid ||submitted"
+      >Войти</button>
+    </form>
+  </div>
+</section>

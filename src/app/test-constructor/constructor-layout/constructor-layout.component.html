@@ -1,0 +1,15 @@
+<nav class="navbar">
+  <h1 routerLink="/">
+    Конструктор тестов
+  </h1>
+
+  <ul *ngIf="authService.isAuthenticated()">
+    <li routerLinkActive="active"><a routerLink="active-tests">Действующие тесты</a></li>
+    <li routerLinkActive="active"><a routerLink="questions">Вопросы</a></li>
+    <li><a class="simple" href="#" (click)="logout($event)">Выйти</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
